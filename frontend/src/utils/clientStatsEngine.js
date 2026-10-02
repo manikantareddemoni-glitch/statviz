@@ -106,8 +106,9 @@ export function parseCSV(text) {
       if (valStr === '' || valStr.toLowerCase() === 'nan' || valStr.toLowerCase() === 'null') {
         record[header] = null;
       } else {
-        const num = Number(valStr);
-        record[header] = !isNaN(num) && valStr !== '' ? num : valStr;
+        const cleanVal = valStr.replace(/,/g, '').replace(/^\$/, '').replace(/%$/, '').trim();
+        const num = Number(cleanVal);
+        record[header] = !isNaN(num) && cleanVal !== '' && !isNaN(Number(cleanVal)) ? num : valStr;
       }
     }
     records.push(record);
@@ -128,7 +129,9 @@ export function inspectDatasetClient(headers, records) {
     const missingPct = totalRows > 0 ? Number(((missingCount / totalRows) * 100).toFixed(2)) : 0;
     
     // Check if numeric
-    const numericValues = nonNull.map(v => (typeof v === 'number' ? v : Number(v))).filter(v => !isNaN(v));
+    const numericValues = nonNull
+      .map(v => (typeof v === 'number' ? v : Number(String(v).replace(/,/g, '').replace(/^\$/, '').replace(/%$/, '').trim())))
+      .filter(v => !isNaN(v));
     const isNumeric = nonNull.length > 0 && numericValues.length === nonNull.length;
     const uniqueValues = new Set(nonNull);
 
