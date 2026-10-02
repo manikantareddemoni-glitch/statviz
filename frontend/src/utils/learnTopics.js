@@ -13,7 +13,13 @@ export const LEARN_TOPICS = {
       "Categorical Variables: Names or categories (e.g. 'Male'/'Female', 'Pass'/'Fail').",
       "Missing Values: Can be filled with the column average (mean) or dropped."
     ],
-    formula: "\\text{Missing Rate} = \\frac{\\text{Missing Rows}}{\\text{Total Rows}} \\times 100\\%",
+    formula: "Missing Rate (%) = (Missing Rows ÷ Total Rows) × 100%",
+    formulaBreakdown: [
+      { symbol: "Missing Rows", meaning: "Number of blank or empty cells in the column" },
+      { symbol: "Total Rows (N)", meaning: "Total number of observations or students in the dataset" },
+      { symbol: "× 100%", meaning: "Converts the fraction into an easy percentage" }
+    ],
+    studentExample: "If a class has 30 students and 3 students have blank test scores: (3 ÷ 30) × 100% = 10% missing rate.",
     nextTab: "frequency",
     nextLabel: "Step 2: Frequency Table"
   },
@@ -23,15 +29,22 @@ export const LEARN_TOPICS = {
     stageNumber: 2,
     studentQuestion: "How are the numbers spread across different score ranges?",
     plainEnglish: "A frequency table groups messy raw numbers into neat buckets (called 'classes' or 'bins'). It tells you how many students scored in each range (e.g. 50-60, 60-70) and what percentage that makes up.",
-    examTip: "Exam Formula: Sturges' Rule k ≈ 1 + 3.322 * log10(n) gives the ideal number of classes. Class mark Xi is always the exact middle of the class: (Lower + Upper) / 2.",
+    examTip: "Exam Formula: Sturges' Rule k ≈ 1 + 3.322 × log₁₀(n) gives the ideal number of classes. Class mark (Xi) is always the exact middle of the class: (Lower Limit + Upper Limit) ÷ 2.",
     whyItMatters: "Instead of staring at 100 individual test scores, a frequency table lets you immediately spot which grade ranges are most common.",
     keyPoints: [
       "Class Interval [L, U): The range of values in each group (e.g. [50 to 60)).",
-      "Class Mark (Xi): Midpoint of the interval = (Lower Limit + Upper Limit) / 2.",
-      "Relative Frequency (fr): The fraction of the total dataset in that bin (fi / N).",
+      "Class Mark (Xᵢ): Midpoint of the interval = (Lower Limit + Upper Limit) ÷ 2.",
+      "Relative Frequency (fᵣ): The fraction of the total dataset in that bin (fᵢ ÷ N).",
       "Cumulative Frequency: The running total of observations up to that class."
     ],
-    formula: "k \\approx 1 + 3.322 \\log_{10}(n), \\quad X_i = \\frac{L_i + U_i}{2}, \\quad f_r = \\frac{f_i}{N}",
+    formula: "Number of Groups (k) ≈ 1 + 3.322 × log₁₀(N)  |  Midpoint (Xᵢ) = (Lower + Upper) ÷ 2  |  Relative Frequency = Count ÷ N",
+    formulaBreakdown: [
+      { symbol: "k (Sturges' Rule)", meaning: "Recommended number of class intervals to avoid too few or too many groups" },
+      { symbol: "N", meaning: "Total number of data points / sample size" },
+      { symbol: "Xᵢ (Class Mark)", meaning: "Exact middle number representing that whole group" },
+      { symbol: "fᵣ (Relative Freq)", meaning: "Proportion of total students falling inside this group" }
+    ],
+    studentExample: "For score bracket [50 to 60): Midpoint = (50 + 60) ÷ 2 = 55. If 6 out of 30 students scored in this bracket, Relative Frequency = 6 ÷ 30 = 0.20 (20%).",
     nextTab: "histogram",
     nextLabel: "Step 3: Histogram & Bell Curve"
   },
@@ -49,7 +62,13 @@ export const LEARN_TOPICS = {
       "Overlaying the Normal Curve shows if your dataset behaves like a classic symmetric bell curve.",
       "Mean (dashed blue line) and Median (dashed yellow line) show which way data is being pulled."
     ],
-    formula: "\\text{Bin Width } w = \\frac{\\text{Max} - \\text{Min}}{k}",
+    formula: "Bar Width (w) = (Maximum Score − Minimum Score) ÷ Number of Bars (k)",
+    formulaBreakdown: [
+      { symbol: "w (Bar Width)", meaning: "How wide each histogram column spans on the X-axis" },
+      { symbol: "Max − Min", meaning: "Total spread / data range from highest to lowest score" },
+      { symbol: "k", meaning: "How many bars you want to slice your data into" }
+    ],
+    studentExample: "If the highest score is 100, lowest score is 40 (Range = 60), and we choose 6 bars: Bar Width = 60 ÷ 6 = 10 marks per bar.",
     nextTab: "ogive",
     nextLabel: "Step 4: Ogive Curves"
   },
@@ -62,11 +81,17 @@ export const LEARN_TOPICS = {
     examTip: "Exam Secret: The intersection point where the Less-Than Ogive and More-Than Ogive cross is ALWAYS the exact Median (50th percentile)!",
     whyItMatters: "Teachers and grading boards use ogives to determine grade cutoffs (e.g., top 10% get an A, bottom 20% need tutoring).",
     keyPoints: [
-      "Less-Than Ogive: Starts at 0 at the bottom-left and rises to 100% (or N) at the top-right.",
-      "More-Than Ogive: Starts at 100% (or N) at the top-left and drops to 0 at the bottom-right.",
-      "Graphical Quartiles: Look up 25% for Q1, 50% for Median, 75% for Q3 on the Y-axis and read the X value."
+      "Less-Than Ogive (Blue): Starts at 0% at bottom-left and rises to 100% at top-right.",
+      "More-Than Ogive (Pink): Starts at 100% at top-left and drops to 0% at bottom-right.",
+      "Graphical Quartiles: Look up 25% for Q₁, 50% for Median, 75% for Q₃ on the Y-axis and read across to the X-axis."
     ],
-    formula: "\\text{Median } M = \\text{X-value where Cumulative Count} = \\frac{N}{2}",
+    formula: "Graphical Quartile = X-score where Cumulative % crosses Target Percentile (25% for Q₁, 50% for Median, 75% for Q₃)",
+    formulaBreakdown: [
+      { symbol: "Q₁ (First Quartile)", meaning: "25% of students scored at or below this value" },
+      { symbol: "Median (Q₂)", meaning: "Exact middle score (50% scored below, 50% scored above)" },
+      { symbol: "Q₃ (Third Quartile)", meaning: "75% of students scored at or below this value" }
+    ],
+    studentExample: "In a class of 40 students: find 20 students (50%) on the Y-axis, follow the horizontal line to the curve, and read down to the X-axis to get the Median score.",
     nextTab: "central_tendency",
     nextLabel: "Step 5: Central Tendency (Averages)"
   },
@@ -76,15 +101,22 @@ export const LEARN_TOPICS = {
     stageNumber: 3,
     studentQuestion: "What is the single best number to describe the typical or average value?",
     plainEnglish: "Central tendency answers: 'Where is the middle of this dataset?' We use three main tools: Mean (arithmetic average), Median (middle student in line), and Mode (most frequent score).",
-    examTip: "Exam Golden Rule: When data has extreme outliers (like a billionaire in a salary survey, or one score of 0), the MEDIAN is much more reliable than the MEAN because outliers pull the mean away!",
+    examTip: "Exam Golden Rule: When data has extreme outliers (like one student scoring 0 or a billionaire in salary survey), the MEDIAN is much more reliable than the MEAN because outliers pull the mean away!",
     whyItMatters: "If a test is easy, the mean might be 85. If a test is hard, it might be 55. Central tendency lets you summarize 1,000 scores with a single representative benchmark.",
     keyPoints: [
-      "Mean (x̄): Add everything up and divide by n. Sensitive to extreme outliers.",
-      "Median (M): The middle number (50th percentile). Unaffected by outliers.",
+      "Mean (x̄): Add everything up and divide by total count n. Sensitive to extreme outliers.",
+      "Median (M): The middle number (50th percentile) when sorted. Completely immune to outliers.",
       "Mode (Mo): The most frequent number. A dataset can have 1 mode, 2 modes (bimodal), or no unique mode.",
       "Trimmed Mean: Drops the top and bottom 5% of extreme values to get a robust average."
     ],
-    formula: "\\bar{x} = \\frac{\\sum x_i}{n}, \\quad M = x_{(\\frac{n+1}{2})}",
+    formula: "Mean (x̄) = (Sum of All Scores) ÷ Total Count (n)  |  Median = Middle Value when Ordered",
+    formulaBreakdown: [
+      { symbol: "x̄ (Mean)", meaning: "Arithmetic average of all values" },
+      { symbol: "Σx (Sum)", meaning: "Add up every single score in the column" },
+      { symbol: "n", meaning: "Number of students / observations" },
+      { symbol: "Median (M)", meaning: "Value at position (n + 1) ÷ 2 in sorted order" }
+    ],
+    studentExample: "For scores [10, 20, 30, 40, 50]: Sum = 150, Count = 5. Mean = 150 ÷ 5 = 30. The middle score is 30.",
     nextTab: "variability",
     nextLabel: "Step 6: Spread & Box Plots"
   },
@@ -97,12 +129,19 @@ export const LEARN_TOPICS = {
     examTip: "Exam Must-Know: Why divide by (n - 1) for sample variance? This is Bessel's Correction—dividing by (n - 1) gives an unbiased estimate for the true population variance.",
     whyItMatters: "Tukey's Box Plot gives you the 'Five Number Summary' (Min, Q1, Median, Q3, Max) and flags unusual outlier students outside 1.5×IQR.",
     keyPoints: [
-      "Range: Max minus Min (simplest measure of total spread).",
-      "Standard Deviation (s): The average distance points sit from the mean (in original units).",
-      "Interquartile Range (IQR = Q3 - Q1): The spread of the middle 50% of the class.",
-      "Tukey Outlier Rule: Any score below Q1 - 1.5*IQR or above Q3 + 1.5*IQR is flagged as an outlier."
+      "Range: Max score minus Min score (simplest measure of total spread).",
+      "Standard Deviation (s): The average distance each score sits from the mean.",
+      "Interquartile Range (IQR = Q₃ − Q₁): The spread of the middle 50% of the class.",
+      "Tukey Outlier Rule: Any score below Q₁ − (1.5 × IQR) or above Q₃ + (1.5 × IQR) is an outlier."
     ],
-    formula: "s = \\sqrt{\\frac{\\sum(x_i - \\bar{x})^2}{n - 1}}, \\quad \\text{IQR} = Q_3 - Q_1, \\quad \\text{Fences} = Q_{1,3} \\pm 1.5 \\times \\text{IQR}",
+    formula: "Standard Deviation (s) = √[ Sum of Squared Distances ÷ (n − 1) ]  |  IQR = Q₃ − Q₁",
+    formulaBreakdown: [
+      { symbol: "s (Std Dev)", meaning: "Average gap/distance of individual points from the average" },
+      { symbol: "IQR", meaning: "Width of the middle 50% box in a Box Plot (Q₃ − Q₁)" },
+      { symbol: "Lower Fence", meaning: "Boundary for low outliers = Q₁ − (1.5 × IQR)" },
+      { symbol: "Upper Fence", meaning: "Boundary for high outliers = Q₃ + (1.5 × IQR)" }
+    ],
+    studentExample: "If Q₁ = 40, Q₃ = 80: IQR = 80 − 40 = 40. Upper Fence = 80 + (1.5 × 40) = 140. A score of 150 is flagged as an outlier!",
     nextTab: "skewness",
     nextLabel: "Step 7: Skewness Meter"
   },
@@ -115,12 +154,19 @@ export const LEARN_TOPICS = {
     examTip: "Easy Memory Trick: Right-Skewed (Positive) = Tail stretches right = Mean > Median. Left-Skewed (Negative) = Tail stretches left = Mean < Median. Symmetric = Mean ≈ Median.",
     whyItMatters: "Income and wealth data are almost always right-skewed (a few billionaires pull the average up). Exam scores on a very easy test are left-skewed (most score high, few score low).",
     keyPoints: [
-      "Symmetric (g1 ≈ 0): Balanced bell shape; Mean ≈ Median ≈ Mode.",
-      "Right-Skewed (g1 > 0.5): Long tail to the right; a few high values pull the Mean above the Median.",
-      "Left-Skewed (g1 < -0.5): Long tail to the left; a few low values drag the Mean below the Median.",
+      "Symmetric (g₁ ≈ 0): Balanced bell shape; Mean ≈ Median ≈ Mode.",
+      "Right-Skewed (g₁ > +0.5): Long tail to the right; a few high values pull the Mean above the Median.",
+      "Left-Skewed (g₁ < −0.5): Long tail to the left; a few low values drag the Mean below the Median.",
       "Kurtosis: Measures whether the peak is sharp and heavy-tailed (Leptokurtic) or flat (Platykurtic)."
     ],
-    formula: "g_1 = \\frac{\\frac{1}{n} \\sum (x_i - \\bar{x})^3}{s^3}, \\quad Sk_2 = \\frac{3(\\bar{x} - \\text{Median})}{s}",
+    formula: "Pearson's Skewness (Sk₂) = 3 × (Mean − Median) ÷ Standard Deviation (s)",
+    formulaBreakdown: [
+      { symbol: "Sk₂ ≈ 0", meaning: "Perfect Symmetry: Mean and Median are virtually equal" },
+      { symbol: "Sk₂ > +0.5", meaning: "Right-Skewed: Extreme high values pull the Mean above the Median" },
+      { symbol: "Sk₂ < −0.5", meaning: "Left-Skewed: Extreme low values pull the Mean below the Median" },
+      { symbol: "Kurtosis", meaning: "Peakedness (sharp tall peak vs flat spread out peak)" }
+    ],
+    studentExample: "If Mean = 80, Median = 70, Standard Deviation = 10: Sk₂ = 3 × (80 − 70) ÷ 10 = +3.0 (Significant Positive / Right Skew).",
     nextTab: "normality",
     nextLabel: "Step 8: Normal Distribution & Q-Q"
   },
@@ -137,7 +183,14 @@ export const LEARN_TOPICS = {
       "Q-Q Plot: If the sample points lie on the 45-degree straight line, data is normal.",
       "Shapiro-Wilk: Statistical test providing a formal p-value for normality."
     ],
-    formula: "f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}, \\quad W = \\frac{(\\sum a_i x_{(i)})^2}{\\sum (x_i - \\bar{x})^2}",
+    formula: "Empirical 68-95-99.7 Rule: Interval = [ Mean − k × (Std Dev)  to  Mean + k × (Std Dev) ]",
+    formulaBreakdown: [
+      { symbol: "k = 1 (±1 SD)", meaning: "Approximately 68.3% of all observations must fall in this band" },
+      { symbol: "k = 2 (±2 SD)", meaning: "Approximately 95.5% of all observations must fall in this band" },
+      { symbol: "k = 3 (±3 SD)", meaning: "Approximately 99.7% of all observations must fall in this band" },
+      { symbol: "p-value ≥ 0.05", meaning: "Test passes: data is consistent with a Gaussian bell curve" }
+    ],
+    studentExample: "If test scores have Mean = 70 and SD = 10: 68% of students scored between 60 and 80 (70 ± 10), and 95% scored between 50 and 90 (70 ± 20).",
     nextTab: "chebyshev",
     nextLabel: "Step 9: Chebyshev's Theorem"
   },
@@ -146,15 +199,21 @@ export const LEARN_TOPICS = {
     stage: "Stage 4: Advanced Modeling & Inferences",
     stageNumber: 4,
     studentQuestion: "What if my data is NOT normal? How can I still guarantee how much data is within k standard deviations?",
-    plainEnglish: "Chebyshev's Theorem is the ultimate safety net! Even if data is skewed, bimodal, or totally weird, Chebyshev guarantees that AT LEAST (1 - 1/k²) of observations MUST lie within k standard deviations of the mean.",
-    examTip: "Exam Calculation: For k = 2, guaranteed minimum is 1 - 1/2² = 1 - 1/4 = 75%. For k = 3, guaranteed minimum is 1 - 1/3² = 88.89%. This works for ANY distribution!",
+    plainEnglish: "Chebyshev's Theorem is the ultimate safety net! Even if data is skewed, bimodal, or totally weird, Chebyshev guarantees that AT LEAST (1 − 1/k²) of observations MUST lie within k standard deviations of the mean.",
+    examTip: "Exam Calculation: For k = 2, guaranteed minimum is 1 − 1/2² = 1 − 1/4 = 75%. For k = 3, guaranteed minimum is 1 − 1/3² = 88.89%. This works for ANY distribution!",
     whyItMatters: "Unlike the Empirical Rule (which only works for normal bell curves), Chebyshev works for every single quantitative dataset in existence.",
     keyPoints: [
       "Works for any distribution (no bell-curve assumption required).",
       "Valid for any k > 1 (e.g. k = 1.5, 2.0, 2.5, 3.0).",
       "Actual dataset % will ALWAYS be equal to or greater than the theoretical floor."
     ],
-    formula: "P(|X - \\mu| < k\\sigma) \\ge 1 - \\frac{1}{k^2} \\quad (\\text{for all } k > 1)",
+    formula: "Guaranteed Minimum % = (1 − 1 ÷ k²) × 100%   (for any k > 1)",
+    formulaBreakdown: [
+      { symbol: "k", meaning: "Number of standard deviations away from the mean (e.g. 2, 3)" },
+      { symbol: "1 − 1/k²", meaning: "Mathematical lower bound percentage guaranteed to be inside" },
+      { symbol: "Range", meaning: "From (Mean − k × SD) to (Mean + k × SD)" }
+    ],
+    studentExample: "For k = 2 standard deviations: Guaranteed Minimum = (1 − 1/4) × 100% = 75%. At least 75% of your dataset is guaranteed to be within 2 SDs of the mean!",
     nextTab: "scatter",
     nextLabel: "Step 10: Scatter & Linear Regression"
   },
@@ -171,7 +230,14 @@ export const LEARN_TOPICS = {
       "r² (Coefficient of Determination): The % of variance in Y accounted for by X.",
       "Line Equation (y = mx + c): m is the slope (how much Y increases per 1 unit of X), c is the Y-intercept."
     ],
-    formula: "r = \\frac{\\text{Cov}(X,Y)}{s_x \\cdot s_y}, \\quad \\hat{y} = mx + c, \\quad r^2 = (r)^2",
+    formula: "Prediction Line: ŷ = (Slope m × X) + (Intercept c)  |  Explained Variance = (r)² × 100%",
+    formulaBreakdown: [
+      { symbol: "m (Slope)", meaning: "Rate of change: how much Y rises/falls when X increases by 1" },
+      { symbol: "c (Intercept)", meaning: "Starting value of Y when X is zero" },
+      { symbol: "r (Correlation)", meaning: "Strength from -1.0 (inverse) to +1.0 (direct relationship)" },
+      { symbol: "r² (%)", meaning: "Percentage of differences in Y explained by X" }
+    ],
+    studentExample: "If the fitted line is `Score = 5 × Hours + 30`: A student studying 8 hours is predicted to score ŷ = (5 × 8) + 30 = 70 marks.",
     nextTab: "report",
     nextLabel: "Step 11: Summary Report & PDF"
   },
@@ -188,7 +254,13 @@ export const LEARN_TOPICS = {
       "Complete descriptive and inferential parameters table.",
       "One-click PDF generation and CSV/JSON downloads."
     ],
-    formula: "\\text{Complete Module I Analytical Dashboard}",
+    formula: "Final Analytical Synthesis: Combines Measures of Center (x̄, M, Mo) + Dispersion (s, IQR) + Shape (g₁, Bell Curve) + Bivariate Models (ŷ = mx + c)",
+    formulaBreakdown: [
+      { symbol: "Stage 1", meaning: "Data cleaning, variable categorization, and missing value treatment" },
+      { symbol: "Stage 2 & 3", meaning: "Frequencies, Histograms, Ogives, Averages, Spread & Box Plots" },
+      { symbol: "Stage 4", meaning: "Skewness assessment, Normality validation, Chebyshev bounds & Regression" }
+    ],
+    studentExample: "Export the full formatted PDF report with charts to attach directly to your homework, lab report, or slide presentation.",
     nextTab: "landing",
     nextLabel: "Return to Home Overview"
   }
