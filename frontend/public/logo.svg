@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#logo-grad)" />
+  <!-- Bar chart bars -->
+  <rect x="9" y="24" width="5" height="15" rx="2" fill="white" fill-opacity="0.9" />
+  <rect x="17" y="14" width="5" height="25" rx="2" fill="white" fill-opacity="0.9" />
+  <rect x="25" y="19" width="5" height="20" rx="2" fill="white" fill-opacity="0.9" />
+  <rect x="33" y="28" width="5" height="11" rx="2" fill="white" fill-opacity="0.9" />
+  <!-- Normal curve sparkline -->
+  <path d="M8 32 C 16 32, 17 11, 24 11 C 31 11, 32 32, 40 32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
+</svg>
