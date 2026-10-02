@@ -1,3 +1,21 @@
+import {
+  parseCSV,
+  storeClientDataset,
+  getStoredDataset,
+  listStoredDatasets,
+  deleteStoredDataset,
+  getClientPreview,
+  cleanStoredDataset,
+  calculateFrequencyClient,
+  calculateDescriptiveClient,
+  calculateOgiveClient,
+  calculateChebyshevClient,
+  calculateNormalityClient,
+  calculateSkewnessClient,
+  calculateScatterClient,
+  generateReportClient
+} from '../utils/clientStatsEngine';
+
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 async function request(endpoint, options = {}) {
@@ -14,109 +32,227 @@ async function request(endpoint, options = {}) {
     },
   };
 
-  // If body is FormData, delete Content-Type to let browser set boundary
   if (options.body instanceof FormData) {
     delete config.headers['Content-Type'];
   }
 
-  try {
-    const res = await fetch(url, config);
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.error || `HTTP ${res.status}: ${res.statusText}`);
-    }
-    return data;
-  } catch (err) {
-    console.error(`API Error on ${endpoint}:`, err);
-    throw err;
+  const res = await fetch(url, config);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || `HTTP ${res.status}: ${res.statusText}`);
   }
+  return data;
 }
 
 export const api = {
-  getHealth: () => request('/health', { method: 'GET' }),
-  getSamples: () => request('/samples', { method: 'GET' }),
-  getDatasets: () => request('/datasets', { method: 'GET' }),
-  getDataset: (id) => request(`/dataset/${id}`, { method: 'GET' }),
-  deleteDataset: (id) => request(`/dataset/${id}`, { method: 'DELETE' }),
-  
-  uploadCSV: (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return request('/upload', {
-      method: 'POST',
-      body: formData,
-    });
+  getHealth: async () => {
+    try {
+      return await request('/health', { method: 'GET' });
+    } catch {
+      return { status: "healthy", mode: "client-engine" };
+    }
   },
 
-  uploadCSVText: (csvText, name = 'Pasted Dataset') =>
-    request('/upload_text', {
-      method: 'POST',
-      body: JSON.stringify({ csv_text: csvText, name }),
-    }),
+  getSamples: async () => {
+    try {
+      return await request('/samples', { method: 'GET' });
+    } catch {
+      return { success: true, samples: [] };
+    }
+  },
 
-  previewDataset: (datasetId, page = 1, pageSize = 15) =>
-    request('/preview', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, page, page_size: pageSize }),
-    }),
+  getDatasets: async () => {
+    try {
+      return await request('/datasets', { method: 'GET' });
+    } catch {
+      return { success: true, datasets: listStoredDatasets() };
+    }
+  },
 
-  cleanDataset: (datasetId, strategy = 'drop', columns = null) =>
-    request('/clean', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, strategy, columns }),
-    }),
+  getDataset: async (id) => {
+    try {
+      return await request(`/dataset/${id}`, { method: 'GET' });
+    } catch {
+      const ds = getStoredDataset(id);
+      if (!ds) throw new Error("Dataset not found");
+      return {
+        success: true,
+        dataset_id: ds.id,
+        name: ds.name,
+        recommended_x: ds.recommendedX,
+        recommended_y: ds.recommendedY,
+        inspection: ds.inspection,
+        preview: getClientPreview(ds.records, 1, 15)
+      };
+    }
+  },
 
-  getFrequency: (datasetId, column, numClasses = null, classWidth = null) =>
-    request('/frequency', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column, num_classes: numClasses, class_width: classWidth }),
-    }),
+  deleteDataset: async (id) => {
+    try {
+      return await request(`/dataset/${id}`, { method: 'DELETE' });
+    } catch {
+      deleteStoredDataset(id);
+      return { success: true, message: `Dataset '${id}' deleted.` };
+    }
+  },
+  
+  uploadCSV: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      return await request('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+    } catch (err) {
+      console.warn("Backend /upload unavailable or 405. Running high-performance client statistical engine:", err);
+      // Fallback: Read file text and process client-side
+      const text = await file.text();
+      const { headers, records } = parseCSV(text);
+      const datasetId = `custom_${Math.random().toString(36).substring(2, 10)}`;
+      const name = file.name.replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
+      const result = storeClientDataset(datasetId, name, headers, records);
+      return { success: true, ...result };
+    }
+  },
 
-  getDescriptive: (datasetId, column) =>
-    request('/descriptive', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column }),
-    }),
+  uploadCSVText: async (csvText, name = 'Pasted Dataset') => {
+    try {
+      return await request('/upload_text', {
+        method: 'POST',
+        body: JSON.stringify({ csv_text: csvText, name }),
+      });
+    } catch (err) {
+      console.warn("Backend /upload_text unavailable or 405. Running high-performance client statistical engine:", err);
+      const { headers, records } = parseCSV(csvText);
+      const datasetId = `custom_${Math.random().toString(36).substring(2, 10)}`;
+      const result = storeClientDataset(datasetId, name, headers, records);
+      return { success: true, ...result };
+    }
+  },
 
-  getOgive: (datasetId, column, numClasses = null) =>
-    request('/ogive', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column, num_classes: numClasses }),
-    }),
+  previewDataset: async (datasetId, page = 1, pageSize = 15) => {
+    try {
+      return await request('/preview', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, page, page_size: pageSize }),
+      });
+    } catch {
+      const ds = getStoredDataset(datasetId);
+      if (!ds) throw new Error("Dataset not found");
+      return {
+        success: true,
+        inspection: ds.inspection,
+        preview: getClientPreview(ds.records, page, pageSize)
+      };
+    }
+  },
 
-  getStemAndLeaf: (datasetId, column, leafUnit = null, splitStems = false) =>
-    request('/stem-and-leaf', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column, leaf_unit: leafUnit, split_stems: splitStems }),
-    }),
+  cleanDataset: async (datasetId, strategy = 'drop', columns = null) => {
+    try {
+      return await request('/clean', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, strategy, columns }),
+      });
+    } catch {
+      const res = cleanStoredDataset(datasetId, strategy, columns);
+      return { success: true, ...res };
+    }
+  },
 
-  getChebyshev: (datasetId, column, k = 2.0, numBins = 15) =>
-    request('/chebyshev', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column, k, num_bins: numBins }),
-    }),
+  getFrequency: async (datasetId, column, numClasses = null, classWidth = null) => {
+    try {
+      return await request('/frequency', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column, num_classes: numClasses, class_width: classWidth }),
+      });
+    } catch {
+      const res = calculateFrequencyClient(datasetId, column, numClasses, classWidth);
+      return { success: true, column, data: res };
+    }
+  },
 
-  getNormality: (datasetId, column, numBins = 15) =>
-    request('/normality', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column, num_bins: numBins }),
-    }),
+  getDescriptive: async (datasetId, column) => {
+    try {
+      return await request('/descriptive', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column }),
+      });
+    } catch {
+      const res = calculateDescriptiveClient(datasetId, column);
+      return { success: true, column, data: res };
+    }
+  },
 
-  getSkewness: (datasetId, column) =>
-    request('/skewness', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, column }),
-    }),
+  getOgive: async (datasetId, column, numClasses = null) => {
+    try {
+      return await request('/ogive', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column, num_classes: numClasses }),
+      });
+    } catch {
+      const res = calculateOgiveClient(datasetId, column, numClasses);
+      return { success: true, column, data: res };
+    }
+  },
 
-  getScatter: (datasetId, xColumn, yColumn) =>
-    request('/scatter', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, x_column: xColumn, y_column: yColumn }),
-    }),
+  getChebyshev: async (datasetId, column, k = 2.0, numBins = 15) => {
+    try {
+      return await request('/chebyshev', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column, k, num_bins: numBins }),
+      });
+    } catch {
+      const res = calculateChebyshevClient(datasetId, column, k, numBins);
+      return { success: true, column, data: res };
+    }
+  },
 
-  getReport: (datasetId, primaryColumn, secondaryColumn = null) =>
-    request('/report', {
-      method: 'POST',
-      body: JSON.stringify({ dataset_id: datasetId, primary_column: primaryColumn, secondary_column: secondaryColumn }),
-    }),
+  getNormality: async (datasetId, column, numBins = 15) => {
+    try {
+      return await request('/normality', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column, num_bins: numBins }),
+      });
+    } catch {
+      const res = calculateNormalityClient(datasetId, column, numBins);
+      return { success: true, column, data: res };
+    }
+  },
+
+  getSkewness: async (datasetId, column) => {
+    try {
+      return await request('/skewness', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, column }),
+      });
+    } catch {
+      const res = calculateSkewnessClient(datasetId, column);
+      return { success: true, column, data: res };
+    }
+  },
+
+  getScatter: async (datasetId, xColumn, yColumn) => {
+    try {
+      return await request('/scatter', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, x_column: xColumn, y_column: yColumn }),
+      });
+    } catch {
+      const res = calculateScatterClient(datasetId, xColumn, yColumn);
+      return { success: true, data: res };
+    }
+  },
+
+  getReport: async (datasetId, primaryColumn, secondaryColumn = null) => {
+    try {
+      return await request('/report', {
+        method: 'POST',
+        body: JSON.stringify({ dataset_id: datasetId, primary_column: primaryColumn, secondary_column: secondaryColumn }),
+      });
+    } catch {
+      const res = generateReportClient(datasetId, primaryColumn, secondaryColumn);
+      return { success: true, data: res };
+    }
+  },
 };
