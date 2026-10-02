@@ -7,6 +7,7 @@ export function StatCard({
   subtitle,
   icon: Icon,
   badge,
+  formula,
   accent = 'indigo',
   delay = 0,
 }) {
@@ -88,32 +89,40 @@ export function StatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
       whileHover={{ y: -2 }}
-      className={`relative overflow-hidden rounded-3xl p-6 border clean-card transition-all duration-200 ${scheme.border}`}
+      className={`relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-5 border clean-card transition-all duration-200 ${scheme.border} flex flex-col justify-between`}
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {title}
-        </span>
-        {Icon && (
-          <div className={`p-2.5 rounded-2xl ${scheme.iconBg}`}>
-            <Icon className="w-5 h-5" />
-          </div>
-        )}
+      <div>
+        <div className="flex items-start justify-between gap-2.5 mb-2.5 min-w-0">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex-1 min-w-0 break-words leading-tight">
+            {title}
+          </span>
+          {Icon && (
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${scheme.iconBg} shrink-0 flex items-center justify-center shadow-xs`}>
+              <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-baseline flex-wrap gap-2 mb-1.5 min-w-0">
+          <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono break-all leading-none">
+            {formattedVal}
+          </span>
+          {badge && (
+            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
+              {badge}
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-baseline gap-2 mb-2">
-        <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
-          {formattedVal}
-        </span>
-        {badge && (
-          <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-            {badge}
-          </span>
-        )}
-      </div>
+      {formula && (
+        <div className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md mb-1.5 w-fit">
+          {formula}
+        </div>
+      )}
 
       {subtitle && (
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed break-words mt-1">
           {subtitle}
         </p>
       )}

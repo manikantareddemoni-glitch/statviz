@@ -121,7 +121,7 @@ export function FrequencyView({ onOpenLearn, onNavigate }) {
 
       {/* Summary Stat Cards */}
       {totals && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           <StatCard
             title="Total Sample (N)"
             value={totals.total_frequency}

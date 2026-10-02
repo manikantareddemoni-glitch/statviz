@@ -212,7 +212,7 @@ export function UploadPreviewView({ onOpenLearn, onNavigate }) {
         </div>
 
         {/* Dataset Summary Cards */}
-        <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
           <StatCard
             title="Total Records (N)"
             value={inspection?.total_rows || 0}
