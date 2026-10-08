@@ -29,7 +29,7 @@ export const LEARN_TOPICS = {
     stageNumber: 2,
     studentQuestion: "How are the numbers spread across different score ranges?",
     plainEnglish: "A frequency table groups messy raw numbers into neat buckets (called 'classes' or 'bins'). It tells you how many students scored in each range (e.g. 50-60, 60-70) and what percentage that makes up.",
-    examTip: "Exam Formula: Sturges' Rule k ≈ 1 + 3.322 × log₁₀(n) gives the ideal number of classes. Class mark (Xi) is always the exact middle of the class: (Lower Limit + Upper Limit) ÷ 2.",
+    examTip: "Exam Concept: Class mark (Xi) is always the exact middle of the class: (Lower Limit + Upper Limit) ÷ 2.",
     whyItMatters: "Instead of staring at 100 individual test scores, a frequency table lets you immediately spot which grade ranges are most common.",
     keyPoints: [
       "Class Interval [L, U): The range of values in each group (e.g. [50 to 60)).",
@@ -37,9 +37,8 @@ export const LEARN_TOPICS = {
       "Relative Frequency (fᵣ): The fraction of the total dataset in that bin (fᵢ ÷ N).",
       "Cumulative Frequency: The running total of observations up to that class."
     ],
-    formula: "Number of Groups (k) ≈ 1 + 3.322 × log₁₀(N)  |  Midpoint (Xᵢ) = (Lower + Upper) ÷ 2  |  Relative Frequency = Count ÷ N",
+    formula: "Midpoint (Xᵢ) = (Lower + Upper) ÷ 2  |  Relative Frequency = Count ÷ N",
     formulaBreakdown: [
-      { symbol: "k (Sturges' Rule)", meaning: "Recommended number of class intervals to avoid too few or too many groups" },
       { symbol: "N", meaning: "Total number of data points / sample size" },
       { symbol: "Xᵢ (Class Mark)", meaning: "Exact middle number representing that whole group" },
       { symbol: "fᵣ (Relative Freq)", meaning: "Proportion of total students falling inside this group" }

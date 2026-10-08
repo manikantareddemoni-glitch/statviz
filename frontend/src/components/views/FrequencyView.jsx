@@ -100,15 +100,9 @@ export function FrequencyView({ onOpenLearn, onNavigate }) {
           </div>
         </div>
 
-        {/* Sturges / FD Rule Suggestions */}
+        {/* Bin Rule Suggestions */}
         {totals && (
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setNumClasses(totals.sturges_recommended_bins)}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 border border-slate-200 dark:border-slate-700 transition-colors"
-            >
-              Sturges' Rule: <strong>k = {totals.sturges_recommended_bins}</strong>
-            </button>
             <button
               onClick={() => setNumClasses(totals.fd_recommended_bins)}
               className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/50 hover:text-cyan-600 border border-slate-200 dark:border-slate-700 transition-colors"
